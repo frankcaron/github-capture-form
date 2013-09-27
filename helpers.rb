@@ -3,26 +3,52 @@ require 'sinatra/base'
 require 'Faraday'
 require 'webrick/https'
 require 'openssl'
+require 'json'
 
 module Sinatra
   module StormpathGitMe
     module Helpers
 
-        # Check to see if the Github handle exists
+        # Validate handle
         def check_handle(name)
-            
+            # Prep return var; 0=handle, 1=numrepos, 2=reponame
+            github_deets = Array.new
+            github_deets[0] = name
+
+            # If name from form is not nil or blank..
             if name.nil? or name == ""
                 return nil
             else 
-                check_github_for_handle(name)
-                return name
+                # Check to see if the github handle exists
+                begin
+                    url = ['https://api.github.com/users', name, 'repos'] * '/'
+                    response = Faraday.get url
+                    code = response.headers["status"].split(' ')[0]
+
+                    # Repo was found
+                    if code == "200"
+                        
+                        # Turn body into json
+                        repos = JSON.parse response.body
+
+                        # Grab details
+                        github_deets[1] = repos.length
+                        github_deets[2] = repos[[*0..repos.length].sample]["name"]
+
+                        # Send email
+                        # Integrate Sendgrid
+
+                        return github_deets
+                    end
+
+                    #No repo found
+                    return nil
+                rescue
+                    #Connection to Github API died.
+                    return nil
+                end
+                
             end
-        end
-
-        # Connect to github and check for handle
-        def check_github_for_handle(handle)
-            response = Faraday.get ['https://api.github.com', handle, '/repos'] * '/'
-
         end
 
     end

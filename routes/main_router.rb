@@ -19,7 +19,9 @@ module Sinatra
                     handle_passes = check_handle(github)
 
                     unless (handle_passes.nil? or handle_passes == "")
-                        @github_handle = handle_passes
+                        @github_handle = handle_passes[0]
+                        @github_num_repos = handle_passes[1]
+                        @github_repo_name = handle_passes[2]
                         erb :main_validated
                     else
                         erb :main_failed
