@@ -25,37 +25,50 @@ module Sinatra
                 begin
                     url = ['https://api.github.com/users', name, 'repos'] * '/'
                     response = Faraday.get url
-                    code = response.headers["status"].split(' ')[0]
 
-                    # Repo was found
-                    if code == "200"
-                        
-                        # Turn body into json
-                        repos = JSON.parse response.body
-
-                        # Grab details
-                        github_deets[1] = repos.length
-                        github_deets[2] = repos[[*0..repos.length].sample]["name"]
-
-                        # Send email
-                        send_email name
-
-                        return github_deets
-                    end
-
-                    #No repo found
-                    return nil
-                rescue
-                    #Connection to Github API died.
+                # Couldn't connect to API
+                rescue Exception => ex
+                    # puts ex.message
+                    # puts ex.backtrace.join("\n") 
                     return nil
                 end
+
+                # Get the status code of the response
+                code = response.headers["status"].split(' ')[0]
+
+                # Repo was found
+                if code == "200"
+                    
+                    # Turn body into json
+                    repos = JSON.parse response.body
+
+                    # Grab details
+                    github_deets[1] = repos.length
+                    github_deets[2] = repos[[*0..repos.length].sample]["name"]
+
+                    # Send email
+                    begin
+                        send_email(name)
+
+                    # Couldn't send mail
+                    rescue Exception => ex
+                        # puts ex.message
+                        # puts ex.backtrace.join("\n") 
+                        return nil
+                    end
+
+                    #Return the finalized variable
+                    return github_deets
+                end
+
+                #No repo found
+                return nil
                 
             end
         end
 
         # Send an email to inform us about the specified github name
         def send_email(name) 
-
             RestClient.post API_URL+"/messages", 
                 :from => "stormpathgitme@stormpath.com",
                 :to => "frank@stormpath.com",
