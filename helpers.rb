@@ -4,6 +4,8 @@ require 'faraday'
 require 'webrick/https'
 require 'openssl'
 require 'json'
+require 'rest_client'
+
 
 module Sinatra
   module StormpathGitMe
@@ -36,7 +38,7 @@ module Sinatra
                         github_deets[2] = repos[[*0..repos.length].sample]["name"]
 
                         # Send email
-                        # Integrate Sendgrid
+                        send_email name
 
                         return github_deets
                     end
@@ -49,6 +51,18 @@ module Sinatra
                 end
                 
             end
+        end
+
+        # Send an email to inform us about the specified github name
+        def send_email(name) 
+            API_KEY = ENV['MAILGUN_API_KEY']
+            API_URL = "https://api:#{API_KEY}@api.mailgun.net/v2/<your-mailgun-domain>"
+
+            RestClient.post API_URL+"/messages", 
+                :from => "stormpathgitme@stormpath.com",
+                :to => "frank@stormpath.com",
+                :subject => "Conference Git Submission",
+                :html => "<a href='http://github.com/" + name +"''>" + name + "</a>"
         end
 
     end
