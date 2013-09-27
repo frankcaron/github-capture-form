@@ -16,6 +16,10 @@
 require_relative 'routes/main_router'
 require_relative 'helpers'
 
+# Interal Vars
+API_KEY = ENV['MAILGUN_API_KEY']
+API_URL = "https://api:#{API_KEY}@api.mailgun.net/v2/<your-mailgun-domain>"
+
 # External Reqs
 require 'sinatra/base'
 

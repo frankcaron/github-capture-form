@@ -55,8 +55,6 @@ module Sinatra
 
         # Send an email to inform us about the specified github name
         def send_email(name) 
-            API_KEY = ENV['MAILGUN_API_KEY']
-            API_URL = "https://api:#{API_KEY}@api.mailgun.net/v2/<your-mailgun-domain>"
 
             RestClient.post API_URL+"/messages", 
                 :from => "stormpathgitme@stormpath.com",
