@@ -1,6 +1,6 @@
 # Helpers
 require 'sinatra/base'
-require 'Faraday'
+require 'faraday'
 require 'webrick/https'
 require 'openssl'
 require 'json'
