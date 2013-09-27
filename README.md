@@ -11,7 +11,13 @@ In your environment vars (e.g., `~/.bash_profile`), you must have the `MAILGUN_A
 
 #### Tech
 
-Written in Ruby with Sinatra. Integrates Mailgun for sending an email.
+Written in Ruby with the following: 
+
+* Sinatra
+* Faraday
+* Rest-Client
+
+Integrates Mailgun for sending an email.
 
 #### Limitations
 
@@ -28,5 +34,5 @@ Deployed to Heroku.
 
 Written with love by Frank Caron
 
-frank@stormpath.com
+frank@stormpath.com  
 [http://www.stormpath.com](http://www.stormpath.com)
