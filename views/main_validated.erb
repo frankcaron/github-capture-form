@@ -1,4 +1,8 @@
+<% unless @github_num_repos == 0 %>
 <p>Man, I can't believe you have <b><%= @github_num_repos %></b> repos, <%= @github_handle %>.<br />You must be one busy bee. And hey, <b>"<%= @github_repo_name %>"</b> looks sweet!</p>
 <p>See us for your swag, and thanks!</p>
-
+<% else %>
+<p>No repos? Really? What are you doing with your weekends then, <%= @github_handle %>? Getting outside and enjoying some fresh air? Well, that's just... a good idea, okay fine. Sunlight is good.</p>
+<p>See us for your swag, and thanks!</p>
+<% end %>
 

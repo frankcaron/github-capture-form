@@ -42,9 +42,15 @@ module Sinatra
                     # Turn body into json
                     repos = JSON.parse response.body
 
-                    # Grab details
-                    github_deets[1] = repos.length
-                    github_deets[2] = repos[[*0..repos.length].sample]["name"]
+                    unless (repos.length == 0)
+                        # Grab details
+                        github_deets[1] = repos.length
+                        github_deets[2] = repos[[*0..repos.length].sample]["name"]
+                    else 
+                        # Grab details
+                        github_deets[1] = 0
+                        github_deets[2] = "Insert Repo Name Here"
+                    end
 
                     # Send email
                     begin
