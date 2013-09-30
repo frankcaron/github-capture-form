@@ -12,6 +12,11 @@
 ## September 26, 2013
 ## -----------------
 
+# External Reqs
+require 'sinatra/base'
+require 'data_mapper'
+require 'dm-postgres-adapter'
+
 # Internal Reqs
 require_relative 'routes/main_router'
 require_relative 'helpers'
@@ -20,8 +25,9 @@ require_relative 'helpers'
 API_KEY = ENV['MAILGUN_API_KEY']
 API_URL = "https://api:#{API_KEY}@api.mailgun.net/v2/app18349060.mailgun.org"
 
-# External Reqs
-require 'sinatra/base'
+# Database Connection
+db = ENV['HEROKU_POSTGRESQL_VIOLET_URL'] || 'postgres://localhost/frankcaron'
+DataMapper.setup(:default, db)
 
 # Construct the main StormpathGitMe App as a Modular Sinatra App
 class StormpathGitMe < Sinatra::Base

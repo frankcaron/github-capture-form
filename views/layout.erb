@@ -4,6 +4,20 @@
     <title>Stormpath - Git Me</title>
     <link href="/bootstrap.css" rel="stylesheet">
     <link href="/jumbotron-narrow.css" rel="stylesheet">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- Form Validation -->
+    <script type="text/javascript">
+
+      $("form").submit(function() {
+        $(this).submit(function() {
+            return false;
+        });
+        return true;
+      });
+
+    </script>
+
 </head>
  <body>
 
@@ -48,10 +62,6 @@
 
     </div> <!-- /container -->
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-  </body>   
+   
 </body>
 </html>

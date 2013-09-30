@@ -1,0 +1,8 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  username: frankcaron
+  password: 
+  database: frankcaron
+  port: 5432  

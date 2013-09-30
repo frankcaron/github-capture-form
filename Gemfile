@@ -2,7 +2,13 @@ source 'https://rubygems.org'
 
 ruby '1.9.3'
 
-# External Dependencies
+# Web Framework
 gem 'sinatra'
+
+# REST client for communicating with API
 gem 'faraday'
-gem 'rest-client'
+
+# Postgres and Data Mapper ORM for DB
+gem 'pg'
+gem 'data_mapper'
+gem 'dm-postgres-adapter'

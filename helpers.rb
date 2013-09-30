@@ -4,7 +4,8 @@ require 'faraday'
 require 'webrick/https'
 require 'openssl'
 require 'json'
-require 'rest_client'
+
+require_relative 'db/githublead'
 
 
 module Sinatra
@@ -13,7 +14,7 @@ module Sinatra
 
         # Validate handle
         def check_handle(name)
-            # Prep return var; 0=handle, 1=numrepos, 2=reponame
+            # Prep return var; 0=handle, 1=numrepos, 2=reponame, 3=email
             github_deets = Array.new
             github_deets[0] = name
 
@@ -23,7 +24,7 @@ module Sinatra
             else 
                 # Check to see if the github handle exists
                 begin
-                    url = ['https://api.github.com/users', name, 'repos'] * '/'
+                    url = ['https://frankcaron@api.github.com/users', name, 'repos'] * '/'
                     response = Faraday.get url
 
                 # Couldn't connect to API
@@ -52,9 +53,23 @@ module Sinatra
                         github_deets[2] = "Insert Repo Name Here"
                     end
 
-                    # Send email
+                    # Fetch user's email
+                    url = ['https://frankcaron@api.github.com/users', name] * '/'
+                    second_response = Faraday.get url
+                    second_response = JSON.parse second_response.body
+
+                    # Return email
+                    email = second_response["email"]
+
+                    unless (email.nil?)
+                        github_deets[3] = email
+                    else 
+                        github_deets[3] = "no email on file"
+                    end
+
+                    # Create database entry for lead
                     begin
-                        send_email(name)
+                        create_record(github_deets)
 
                     # Couldn't send mail
                     rescue Exception => ex
@@ -73,13 +88,13 @@ module Sinatra
             end
         end
 
-        # Send an email to inform us about the specified github name
-        def send_email(name) 
-            RestClient.post API_URL+"/messages", 
-                :from => "stormpathgitme@stormpath.com",
-                :to => "frank@stormpath.com",
-                :subject => "Conference Git Submission",
-                :html => "<a href='http://github.com/" + name +"''>" + name + "</a>"
+        # Writes to the database
+        def create_record(details)
+            @post = GithubLead.create(
+                :email     => details[3],
+                :handle    => details[0],
+                :num_repos => details[1]
+            )
         end
 
     end
