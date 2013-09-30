@@ -23,7 +23,6 @@ Integrates Postgresql for lead persistence.
 Currently limited in the following ways:
 
 * Github API calls are limited to 60 per hour (60 submissions per hour)
-* Mailgun API calls are limited to 300 per day (300 submissions per day total)
 
 #### Deployed
 
