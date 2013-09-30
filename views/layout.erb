@@ -8,14 +8,17 @@
 
     <!-- Form Validation -->
     <script type="text/javascript">
-
-      $("form").submit(function() {
-        $(this).submit(function() {
-            return false;
+      (function(){
+        var submitted = false;
+          
+        $(document).on("submit", function(event) {
+          if(submitted) {
+            event.preventDefault();
+          }
+          submitted = true;
         });
-        return true;
+        
       });
-
     </script>
 
 </head>
