@@ -15,9 +15,8 @@ Written in Ruby with the following:
 
 * Sinatra
 * Faraday
-* Rest-Client
 
-Integrates Mailgun for sending an email.
+Integrates Postgresql for lead persistence.
 
 #### Limitations
 

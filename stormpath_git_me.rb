@@ -22,8 +22,7 @@ require_relative 'routes/main_router'
 require_relative 'helpers'
 
 # Interal Vars
-API_KEY = ENV['MAILGUN_API_KEY']
-API_URL = "https://api:#{API_KEY}@api.mailgun.net/v2/app18349060.mailgun.org"
+$form_submitted = "false"
 
 # Database Connection
 db = ENV['HEROKU_POSTGRESQL_VIOLET_URL'] || 'postgres://localhost/frankcaron'
@@ -48,11 +47,6 @@ class StormpathGitMe < Sinatra::Base
 
     # Set Method Override
     enable :method_override
-
-    # Handle errors
-    not_found do
-        erb :not_found
-    end
 
     # Register Helpers
     helpers Sinatra::StormpathGitMe::Helpers

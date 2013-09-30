@@ -10,13 +10,18 @@ module Sinatra
             def self.registered(app)
 
                 app.get '/' do
+                    $form_submitted = false
                     erb :main
                 end
 
-                app.post '/' do
+                app.post '/process' do
 
                     github = params[:github_handle]
-                    handle_passes = check_handle(github)
+
+                    unless ($form_submitted)
+                        $form_submitted = true
+                        handle_passes = check_handle(github)
+                    end
 
                     unless (handle_passes.nil? or handle_passes == "")
                         @github_handle = handle_passes[0]
@@ -26,6 +31,16 @@ module Sinatra
                     else
                         erb :main_failed
                     end
+                end
+
+                app.get '/*' do
+                    $form_submitted = false
+                    erb :main
+                end
+
+                app.post '/' do
+                    $form_submitted = false
+                    erb :main_superfailed
                 end
 
             end

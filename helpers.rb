@@ -21,6 +21,7 @@ module Sinatra
             # If name from form is not nil or blank..
             if name.nil? or name == ""
                 return nil
+                puts "Name is nil"
             else 
                 # Check to see if the github handle exists
                 begin
@@ -29,8 +30,8 @@ module Sinatra
 
                 # Couldn't connect to API
                 rescue Exception => ex
-                    # puts ex.message
-                    # puts ex.backtrace.join("\n") 
+                    puts ex.message
+                    puts ex.backtrace.join("\n") 
                     return nil
                 end
 
@@ -43,7 +44,7 @@ module Sinatra
                     # Turn body into json
                     repos = JSON.parse response.body
 
-                    unless (repos.length == 0)
+                    unless (repos.length == 0 || repos.length == "0")
                         # Grab details
                         github_deets[1] = repos.length
                         github_deets[2] = repos[[*0..repos.length].sample]["name"]
@@ -73,8 +74,8 @@ module Sinatra
 
                     # Couldn't send mail
                     rescue Exception => ex
-                        # puts ex.message
-                        # puts ex.backtrace.join("\n") 
+                        puts ex.message
+                        puts ex.backtrace.join("\n") 
                         return nil
                     end
 
@@ -82,7 +83,8 @@ module Sinatra
                     return github_deets
                 end
 
-                #No repo found
+                #API error
+                puts "Error communicating with Github API"
                 return nil
                 
             end
