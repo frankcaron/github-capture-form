@@ -9,6 +9,10 @@ module Sinatra
         module MainRouter
             def self.registered(app)
 
+                app.before do
+                    cache_control :no_cache, :no_store, :must_revalidate, :max_age => 0
+                end
+
                 app.get '/' do
                     $form_submitted = false
                     erb :main
@@ -33,11 +37,17 @@ module Sinatra
                     end
                 end
 
-                app.get '/*' do
-                    $form_submitted = false
-                    erb :main
+                # Handle Github API Down
+                app.get '/github_down' do
+                    erb :github_down
                 end
 
+                # Catch all
+                app.get '/*' do
+                    redirect '/'
+                end
+
+                # Catch form abuse
                 app.post '/' do
                     $form_submitted = false
                     erb :main_superfailed

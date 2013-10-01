@@ -25,14 +25,14 @@ module Sinatra
             else 
                 # Check to see if the github handle exists
                 begin
-                    url = ['https://frankcaron@api.github.com/users', name, 'repos'] * '/'
+                    url = ['https://api.github.com/users', name, 'repos'] * '/'
                     response = Faraday.get url
 
                 # Couldn't connect to API
                 rescue Exception => ex
                     puts ex.message
                     puts ex.backtrace.join("\n") 
-                    return nil
+                    redirect '/github_down'
                 end
 
                 # Get the status code of the response
@@ -55,9 +55,17 @@ module Sinatra
                     end
 
                     # Fetch user's email
-                    url = ['https://frankcaron@api.github.com/users', name] * '/'
-                    second_response = Faraday.get url
-                    second_response = JSON.parse second_response.body
+                    begin
+                        url = ['https://api.github.com/users', name] * '/'
+                        second_response = Faraday.get url
+                        second_response = JSON.parse second_response.body
+
+                    # Couldn't connect to API
+                    rescue Exception => ex
+                        puts ex.message
+                        puts ex.backtrace.join("\n") 
+                        redirect '/github_down'
+                    end
 
                     # Return email
                     email = second_response["email"]
@@ -72,7 +80,7 @@ module Sinatra
                     begin
                         create_record(github_deets)
 
-                    # Couldn't send mail
+                    # Couldn't write record
                     rescue Exception => ex
                         puts ex.message
                         puts ex.backtrace.join("\n") 
@@ -80,13 +88,13 @@ module Sinatra
                     end
 
                     #Return the finalized variable
-                    return github_deets
-                end
-
-                #API error
-                puts "Error communicating with Github API"
-                return nil
+                    return github_deets           
                 
+                # No repos
+                else 
+                    puts "No repo; got a code " + code
+                    return nil
+                end
             end
         end
 
